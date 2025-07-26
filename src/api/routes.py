@@ -20,3 +20,40 @@ def handle_hello():
     }
 
     return jsonify(response_body), 200
+
+# Endpoint utilizado para registrar nuevos usuarios 
+@api.route('/register',  methods=['POST'])
+def register_user():
+    try:
+
+        username = request.json.get("username")
+        email = request.json.get("email")
+        password = request.json.get("password")
+
+
+        if not username or not email or not password:
+            return jsonify({"message": "No se llenaron todos los campos, por favor completar"}), 401
+        
+
+
+        email_exist = User.query.filter_by(email = email).first()
+
+        if email_exist:
+            return jsonify({"message":f"El email {email_exist} ya existe en la base de datos, debe usar uno nuevo"}), 401
+        
+        password_hash = bcrypt.generate_password_hash(password).decode("utf-8")
+
+        new_user = User(username=username,email=email, password=password_hash)
+
+        db.session.add(new_user)
+        db.session.flush()
+        db.session.commit()
+
+
+    except Exception as error:
+        return jsonify({"message":f"Se presenta el siguiente error {error}"}), 500
+    
+
+
+
+    
