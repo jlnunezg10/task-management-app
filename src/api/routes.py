@@ -130,7 +130,25 @@ def add_task():
 
         return (jsonify(new_task.serialize())), 201
 
+    except Exception as error:
+        return jsonify({"message":f"Se presenta el siguiente error {error}"}), 500
+    
 
+@api.route('/tasks', methods=['GET'])
+@jwt_required()
+def get_tasks():
+
+    try:
+        user_id = get_jwt_identity()
+
+        all_tasks = Tasks.query.filter_by(user_id=user_id).all()
+
+        if not all_tasks:
+            return(jsonify({"message":"No hay tareas registradas del usuario"}))
+        
+        all_tasks = list(map(lambda task: task.serialize(), all_tasks))
+
+        return(jsonify(all_tasks)), 201
 
     except Exception as error:
         return jsonify({"message":f"Se presenta el siguiente error {error}"}), 500
