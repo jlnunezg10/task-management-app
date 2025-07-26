@@ -80,7 +80,7 @@ def login():
         user = User.query.filter_by(email=email).first()
 
         if not user:
-            return jsonify({"message":f"El usuario {user} no existe"}), 404
+            return jsonify({"message":f"El usuario no existe"}), 404
         
         db_password = user.password
 
@@ -186,4 +186,29 @@ def edit_task(task_id):
 
     except Exception as error:
         return jsonify({"message":f"Se presenta el siguiente error {error}"}), 500
+    
+#Endpoint para eliminar un task del usuario
+@api.route('/tasks/<int:task_id>', methods=['DELETE'])
+@jwt_required()
+def delete_task(task_id):
+
+    try:
+
+        user_id = get_jwt_identity()
+
+        task_to_delete = Tasks.query.filter_by(id = task_id, user_id = user_id).first()
+
+        if not task_to_delete:
+            return (jsonify({"message":"La tarea a eliminar no existe"})), 400
+
+        db.session.delete(task_to_delete)
+        db.session.commit()
+
+        return(jsonify({"message":"Tarea borrada de forma exitosa"}))
+
+
+    except Exception as error:
+        return jsonify({"message":f"Se presenta el siguiente error {error}"}), 500
+    
+
 
