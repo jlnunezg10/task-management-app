@@ -133,7 +133,7 @@ def add_task():
     except Exception as error:
         return jsonify({"message":f"Se presenta el siguiente error {error}"}), 500
     
-
+#Endpoint para obtener todos los tasks del usuario
 @api.route('/tasks', methods=['GET'])
 @jwt_required()
 def get_tasks():
@@ -153,6 +153,37 @@ def get_tasks():
     except Exception as error:
         return jsonify({"message":f"Se presenta el siguiente error {error}"}), 500
     
+#Endpoint para editar un task del usuario
+@api.route('/tasks/<int:task_id>', methods=['PUT'])
+@jwt_required()
+def edit_task(task_id):
+
+    try:
+
+        label = request.json.get("label")
+        completed_task = request.json.get("completed")
+
+        user_id = get_jwt_identity()
+
+        task_to_edit = Tasks.query.filter_by(id = task_id, user_id = user_id).first()
+
+        if not task_to_edit:
+            return (jsonify({"message":"La tarea a editar no existe"})), 400
+        
+        if not label or label == "" or len(label) <= 1:
+            return (jsonify({"message":"El label no puede estar vacio"})), 400
+        
+        task_to_edit.label = label
+
+        if completed_task:
+            task_to_edit.completed = completed_task
+        
+
+        db.session.commit()
+
+        return(jsonify(task_to_edit.serialize())), 201
 
 
-    
+    except Exception as error:
+        return jsonify({"message":f"Se presenta el siguiente error {error}"}), 500
+
