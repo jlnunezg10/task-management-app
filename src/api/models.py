@@ -28,7 +28,7 @@ class User(db.Model):
 class Tasks(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     label = db.Column(db.String(120), unique=True, nullable=False)
-    completed = db.Column(db.Boolean(), unique=False, nullable=False)
+    completed = db.Column(db.Boolean(), unique=False, nullable=False,default=False)
         
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 

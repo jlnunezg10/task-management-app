@@ -2,7 +2,7 @@
 This module takes care of starting the API Server, Loading the DB and Adding the endpoints
 """
 from flask import Flask, request, jsonify, url_for, Blueprint
-from api.models import db, User
+from api.models import db, User, Tasks
 from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
 from flask_bcrypt import Bcrypt
@@ -62,6 +62,7 @@ def register_user():
     except Exception as error:
         return jsonify({"message":f"Se presenta el siguiente error {error}"}), 500
     
+#Endpoint para loguear usuarios en la plataforma
 @api.route('/login', methods=['POST'])
 def login():
 
@@ -96,7 +97,7 @@ def login():
             user.last_login = datetime.now(timezone.utc)
             db.session.commit()
 
-            return (jsonify({"message":f"Login Exitoso {user.username}", "access_token": access_token})), 200
+            return (jsonify({"message":f"Login Exitoso {user.username}", "access_token": access_token})), 201
         else:
 
             return (jsonify({"message":"Contraseña incorrecta"})), 400
@@ -105,6 +106,35 @@ def login():
         return jsonify({"message":f"Se presenta el siguiente error {error}"}), 500
     
 
+#Endpoint para cerrar sesion
+
+#Enpoint para agregar una nueva tarea
+@api.route('/tasks', methods=['POST'])
+@jwt_required()
+def add_task():
+
+    try:
+
+        user_id = get_jwt_identity()
+        label = request.json.get("label")   
+        
+        task_exists = Tasks.query.filter_by(label=label).first()
+
+        if task_exists:
+            return (jsonify({"message":"Existe una tarea con el mismo nombre"})), 400
+        
+        new_task = Tasks(label = label,user_id=user_id)
+
+        db.session.add(new_task)
+        db.session.commit()
+
+        return (jsonify(new_task.serialize())), 201
+
+
+
+    except Exception as error:
+        return jsonify({"message":f"Se presenta el siguiente error {error}"}), 500
+    
 
 
     
