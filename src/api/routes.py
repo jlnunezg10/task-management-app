@@ -56,6 +56,9 @@ def register_user():
         db.session.commit()
 
 
+        return (jsonify(new_user.serialize())), 201
+
+
     except Exception as error:
         return jsonify({"message":f"Se presenta el siguiente error {error}"}), 500
     
@@ -93,7 +96,7 @@ def login():
             user.last_login = datetime.now(timezone.utc)
             db.session.commit()
 
-            return (jsonify({"message":f"Logueado Exitoso {user.username}", "access_token": access_token})), 200
+            return (jsonify({"message":f"Login Exitoso {user.username}", "access_token": access_token})), 200
         else:
 
             return (jsonify({"message":"Contraseña incorrecta"})), 400
