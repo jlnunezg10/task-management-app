@@ -5,11 +5,17 @@ from flask import Flask, request, jsonify, url_for, Blueprint
 from api.models import db, User
 from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
+from flask_bcrypt import Bcrypt
+from datetime import timedelta, timezone, datetime
+from flask_jwt_extended import create_access_token
+from flask_jwt_extended import get_jwt_identity
+from flask_jwt_extended import jwt_required 
 
 api = Blueprint('api', __name__)
 
 # Allow CORS requests to this API
 CORS(api)
+bcrypt = Bcrypt()
 
 
 @api.route('/hello', methods=['POST', 'GET'])
@@ -49,6 +55,48 @@ def register_user():
         db.session.flush()
         db.session.commit()
 
+
+    except Exception as error:
+        return jsonify({"message":f"Se presenta el siguiente error {error}"}), 500
+    
+@api.route('/login', methods=['POST'])
+def login():
+
+    try:
+
+        email = request.json.get("email")
+        password = request.json.get("password")
+
+        if not email:
+            return jsonify({"message":"Falta el email"}), 401
+        
+        if not password:
+            return jsonify({"message":"Falta la contraseña"}), 401
+        
+        user = User.query.filter_by(email=email).first()
+
+        if not user:
+            return jsonify({"message":f"El usuario {user} no existe"}), 404
+        
+        db_password = user.password
+
+        true_false = bcrypt.check_password_hash(db_password, password)
+        if true_false:
+            expires = timedelta(days=1)
+            user_id = user.id
+
+            access_token = create_access_token(
+                identity=str(user_id),
+                expires_delta=expires,
+            )
+
+            user.last_login = datetime.now(timezone.utc)
+            db.session.commit()
+
+            return (jsonify({"message":f"Logueado Exitoso {user.username}", "access_token": access_token})), 200
+        else:
+
+            return (jsonify({"message":"Contraseña incorrecta"})), 400
 
     except Exception as error:
         return jsonify({"message":f"Se presenta el siguiente error {error}"}), 500
