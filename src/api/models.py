@@ -9,7 +9,6 @@ class User(db.Model):
     username = db.Column(db.String(80), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(80), unique=False, nullable=False)
-    is_active = db.Column(db.Boolean(), unique=False, nullable=False)
 
     tasks = db.relationship('Tasks', backref='user', lazy=True)
 
@@ -29,7 +28,7 @@ class User(db.Model):
 class Tasks(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     label = db.Column(db.String(120), unique=True, nullable=False)
-    completed = db.Column(db.Boolean(), unique=False, nullable=False)
+    completed = db.Column(db.Boolean(), unique=False, nullable=False,default=False)
         
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
