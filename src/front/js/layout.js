@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import ScrollToTop from "./component/scrollToTop";
 import { BackendURL } from "./component/backendURL";
@@ -10,6 +10,9 @@ import injectContext from "./store/appContext";
 
 import { Navbar } from "./component/navbar";
 import { Footer } from "./component/footer";
+import  Signup  from "./pages/Signup.jsx";
+import  Login  from "./pages/Login.jsx";
+import InputTask from "./pages/InputTask.jsx";
 
 //create your first component
 const Layout = () => {
@@ -27,10 +30,14 @@ const Layout = () => {
                     <Routes>
                         <Route element={<Home />} path="/" />
                         <Route element={<Demo />} path="/demo" />
+                        <Route element={<Signup />} path="/signup" />
+                        <Route element={<InputTask />} path="/tasks" />
+                        <Route element={<Login />} path="/login" />
+                        
                         <Route element={<Single />} path="/single/:theid" />
                         <Route element={<h1>Not found!</h1>} />
                     </Routes>
-                    <Footer />
+            
                 </ScrollToTop>
             </BrowserRouter>
         </div>
