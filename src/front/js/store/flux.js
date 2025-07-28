@@ -223,7 +223,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					}
 
 					const data = await result.json()
-					setStore({...store,tasks:[...getStore().tasks, data]})
+					setStore({...getStore(),tasks:[...getStore().tasks, data]})
 					console.log("Tarea editada")
 					return true;
 					
@@ -233,6 +233,70 @@ const getState = ({ getStore, getActions, setStore }) => {
 				}
 
 
+			},
+
+			get_tasks: async() => {
+				try {
+					const urlApi = `${apiURL}/api/tasks/`
+
+					const result = await fetch(urlApi, {
+						method:"GET",
+						headers: {
+							"Authorization": `Bearer ${localStorage.getItem('token')}`,
+							"Content-type": "application/json; charset=UTF-8"
+						}
+					});
+
+						if (!result.ok){
+						console.error("Error en obtener task")
+						throw new Error(result.status)
+					}
+
+					const data = await result.json()
+
+					setStore({...getStore(),tasks:data})
+					console.log("Se obtuvo las tasks")
+					return true;
+
+					
+				} catch (error) {
+					console.error("Se presenta el siguiente error:", error)
+					return false;					
+				}
+			},
+
+			delete_task: async(task_id) =>{
+				try {
+					if(!task_id){
+						console.error("No se tiene un task id")
+						return false;
+					}
+
+					const urlApi = `${apiURL}/api/tasks/${task_id}`
+					const result = await fetch(urlApi, {
+						method:"DELETE",
+						headers: {
+							"Authorization": `Bearer ${localStorage.getItem('token')}`,
+							"Content-type": "application/json; charset=UTF-8"
+						}
+					});
+
+					if (!result.ok){
+						console.error("Error en obtener task")
+						throw new Error(result.status)
+					}
+
+					setStore({...getStore(),tasks: getStore().tasks.filter(task => task.id !== task_id)})
+					console.log("Task eliminado exitosamente")
+					return true;
+					
+
+					
+				} catch (error) {
+					console.error("Se presenta el siguiente error:", error)
+					return false;
+					
+				}
 			}
 
 
