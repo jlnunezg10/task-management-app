@@ -8,6 +8,8 @@ const InputTask = ()=>{
     const {store,actions} = useContext(Context)
     const [text, setText] = useState("")
     const [IdEdit, setIdEdit] = useState(null)
+    const [isChecked, setIsChecked] = useState(false);
+    const navigate = useNavigate()
 
 
     //Funcion handle para añadir la tarea en la lista y enviarla al API
@@ -55,15 +57,29 @@ const InputTask = ()=>{
         setIdEdit(id)
     }
 
+    const handleCheckboxChange = async (id,checkbox) => {
+        const checkIt = await actions.check_task(id,checkbox)
+        if(!checkIt){
+        alert("No se pudo actualizar el estado de la tarea");
+        return;
+        }
+        await actions.get_tasks();
+
+
+  };
+
     useEffect(()=>{
         const actualizar = async () => {
             await actions.get_tasks()
         }
-
         actualizar()
-		
-			
 	}, []);
+
+        useEffect(() => {
+                if (!localStorage.getItem("token")) {
+                    navigate('/login')
+            }
+        }, [])
 
 
     return(
@@ -88,7 +104,11 @@ const InputTask = ()=>{
                                 <p className='my-1 m-1 text-secondary' >{task.label}</p> 
                                 <button type='button' onClick={()=>handleEdit(task.id,task.label)}><i className="fa-solid fa-pencil"></i> </button>
                                 <button type='button' onClick={()=>handleDelete(task.id)}><i className="fa-solid fa-trash"></i></button>
-                                
+                                <input 
+                                        type="checkbox" 
+                                        checked={task.completed} 
+                                        onChange={()=> handleCheckboxChange(task.id, !task.completed)} 
+                                        />
                             </li>
                         )
                     })

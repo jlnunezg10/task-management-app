@@ -171,7 +171,7 @@ def edit_task(task_id):
             return (jsonify({"message":"La tarea a editar no existe"})), 400
         
         if not label or label == "" or len(label) <= 1:
-            return (jsonify({"message":"El label no puede estar vacio"})), 400
+            return (jsonify({"message":"El label no puede estar vacio"})), 401
         
         task_to_edit.label = label
 
@@ -209,6 +209,31 @@ def delete_task(task_id):
 
     except Exception as error:
         return jsonify({"message":f"Se presenta el siguiente error {error}"}), 500
+    
+#Endpoint para completar o descompletar tarea
+@api.route('/check-task/<int:task_id>', methods=['PUT'])
+@jwt_required()
+def check_task(task_id):
+
+    try:
+        completed_task = request.json.get("completed")
+
+        user_id = get_jwt_identity()
+
+        task_to_edit = Tasks.query.filter_by(id = task_id, user_id = user_id).first()
+
+        if not task_to_edit:
+            return (jsonify({"message":"La tarea a editar no existe"})), 400
+                
+        task_to_edit.completed = completed_task
+        db.session.commit()
+
+        return(jsonify(task_to_edit.serialize())), 201
+
+
+    except Exception as error:
+        return jsonify({"message":f"Se presenta el siguiente error {error}"}), 500
+
     
 
 

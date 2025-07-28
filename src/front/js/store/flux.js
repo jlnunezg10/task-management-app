@@ -246,6 +246,51 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 			},
 
+			check_task: async(task_id,completed) => {
+				try {
+					const urlApi = `${apiURL}/api/check-task/${task_id}`
+
+					const result = await fetch(urlApi, {
+						method:"PUT",
+						body:JSON.stringify({
+							completed:completed
+						}),
+						headers: {
+							"Authorization": `Bearer ${localStorage.getItem('token')}`,
+							"Content-type": "application/json; charset=UTF-8"
+						}
+					});
+
+					if (!result.ok){
+						console.error("Error en editar task")
+						throw new Error(result.status)
+
+					}
+
+					const data = await result.json()
+					setStore({...getStore(),tasks:[...getStore().tasks, data]})
+					if(data.completed){
+						console.log("Tarea completada")
+					}
+					else{
+						console.log("Tarea sin completar")
+					}
+					
+					return true;
+
+
+
+
+					
+				} catch (error) {
+					console.error("Se presenta el siguiente error:", error)
+					return false;
+					
+				}
+
+
+			},
+
 			get_tasks: async() => {
 				try {
 					const urlApi = `${apiURL}/api/tasks/`
