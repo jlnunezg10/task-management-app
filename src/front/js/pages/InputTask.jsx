@@ -1,6 +1,5 @@
 import React, {useEffect, useState, useContext} from 'react'
 import {Context} from "../store/appContext"
-//import { toast } from "react-toastify";
 import { Link, useNavigate } from "react-router-dom";
 
 const InputTask = ()=>{
@@ -28,6 +27,9 @@ const InputTask = ()=>{
         }
         else{
             const addTask = await actions.add_task(text)
+                if(addTask == "403"){
+                    alert("No se pueden tener dos tareas iguales")
+                }
 
                 if (!addTask){
                     alert("Ocurrio un problema al agregar la tarea")
@@ -56,7 +58,7 @@ const InputTask = ()=>{
         setText(label)
         setIdEdit(id)
     }
-
+    //Funcion para editar el checkbox y actualizarlo en DB
     const handleCheckboxChange = async (id,checkbox) => {
         const checkIt = await actions.check_task(id,checkbox)
         if(!checkIt){
@@ -68,13 +70,14 @@ const InputTask = ()=>{
 
   };
 
+    //Actualiza cada renderizado las tareas nuevas
     useEffect(()=>{
         const actualizar = async () => {
             await actions.get_tasks()
         }
         actualizar()
 	}, []);
-
+        //verificacion de usuario logueado
         useEffect(() => {
                 if (!localStorage.getItem("token")) {
                     navigate('/login')
@@ -84,14 +87,20 @@ const InputTask = ()=>{
 
     return(
 
-        <div>  
-            <h1 className='text-secondary text-center titulo'>Tareas por hacer</h1>
-            <div className='container card bg-white d-flex flex-column justify-content-center w-50 tarjeta'>               
-                <div className='card-header bg-white'>
-                    <input type="text" onChange={(e)=> setText(e.target.value)} onKeyDown={handleEnter} value={text} placeholder='Que hay por hacer?'/>
+        <div className='d-flex justify-content-center'>  
+
+            <div className="card shadow rounded w-75 bg-white">
+
+                <div className="card-header bg-light">
+                    <h2 className="text-secondary text-center mb-0">Tareas por hacer</h2>
                 </div>
 
-            </div>
+            <div className="card-body">             
+                <div className='card-header bg-white'>
+                    <input type="text" onChange={(e)=> setText(e.target.value)} onKeyDown={handleEnter} value={text} style={{ border: "none", outline: "none" }}  placeholder='Que hay por hacer?'/>
+                </div>
+
+            
 
 
             <ul className='list-group list-group-flush'>
@@ -102,14 +111,20 @@ const InputTask = ()=>{
                         return(
                             <li className='list-group-item bg-white d-flex flex-row justify-content-between' key={`${task.id}-${indx}`}>
                                 <p className='my-1 m-1 text-secondary' >{task.label}</p> 
-                                <button type='button' onClick={()=>handleEdit(task.id,task.label)}><i className="fa-solid fa-pencil"></i> </button>
-                                <button type='button' onClick={()=>handleDelete(task.id)}><i className="fa-solid fa-trash"></i></button>
-                                <input 
+                                <div>
+                                    <button type='button' className="btn btn-sm btn-outline-secondary mx-1" onClick={()=>handleEdit(task.id,task.label)}><i className="fa-solid fa-pencil"></i></button>
+                                    <button type='button' className="btn btn-sm btn-outline-danger" onClick={()=>handleDelete(task.id)}><i className="fa-solid fa-trash"></i></button>
+                                    <input 
                                         type="checkbox" 
+                                        className='ms-1'
                                         checked={task.completed} 
                                         onChange={()=> handleCheckboxChange(task.id, !task.completed)} 
                                         />
-                            </li>
+
+                                </div>
+                                </li>
+                                
+                                
                         )
                     })
 
@@ -122,7 +137,8 @@ const InputTask = ()=>{
             </ul>
 
 
-
+                </div>
+        </div>
         </div>
 
     )

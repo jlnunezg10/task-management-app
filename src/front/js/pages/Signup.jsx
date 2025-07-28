@@ -1,6 +1,5 @@
 import React, {useEffect, useState, useContext} from 'react'
 import {Context} from "../store/appContext"
-//import { toast } from "react-toastify";
 import { Link, useNavigate } from "react-router-dom";
 
 const Signup = () => {
@@ -28,35 +27,26 @@ const Signup = () => {
 
    }
 
-  //   useEffect(() => {
-  //   if (localStorage.getItem("token")) {
-  //     navigate('/')
-  //   }
-  // }, [])
-
-
   return (
-    <div>
+    <div className="container d-flex justify-content-center align-items-center" style={{ minHeight: '100vh' }}>
+      <div className="card shadow p-4" style={{ width: '100%', maxWidth: '600px' }}>
+      <h5 className="card-title text-center mb-4">Crea un nuevo Usuario</h5>
 
-        <div className="mb-3">
-            <label htmlFor="username" className="form-label">Ingresar un nombre de usuarip</label>
-            <input type="text" className="form-control" id="username" required value={username} onChange={(e) => {setUsername(e.target.value)}}/>
-        </div>
-
-        <div className="mb-3">
+        <div className="mb-3 row">
             <label htmlFor="email" className="form-label">Ingresar una direccion email</label>
             <input type="email" className="form-control" id="email" placeholder="name@example.com" required value={email} onChange={(e) => {setEmail(e.target.value)}}/>
         </div>
 
-        <div className="mb-3">
-            <label htmlFor="inputPassword" className="col-sm-2 col-form-label">Ingresar una contraseña</label>
-            <div className="col-sm-10">
+        <div className="mb-3 row">
+            <label htmlFor="inputPassword" className="form-label">Ingresar una contraseña</label>
             <input type="password" className="form-control" id="inputPassword" required value={password} onChange={(e) => {setPassword(e.target.value)}}/>
-        </div>
-
-        <button type="button" className="btn btn-primary" onClick={handleRegister}>Crear nueva cuenta</button>
-  </div>
+       
+          </div>
+    <div className='row'>
+      <button type="button" className="btn btn-primary" onClick={handleRegister}>Crear nueva cuenta</button>
+    </div>
       
+    </div>
     </div>
   )
 }

@@ -121,7 +121,7 @@ def add_task():
         task_exists = Tasks.query.filter_by(label=label).first()
 
         if task_exists:
-            return (jsonify({"message":"Existe una tarea con el mismo nombre"})), 400
+            return (jsonify({"message":"Existe una tarea con el mismo nombre"})), 403
         
         new_task = Tasks(label = label,user_id=user_id)
 

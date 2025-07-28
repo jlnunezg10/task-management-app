@@ -177,9 +177,9 @@ const getState = ({ getStore, getActions, setStore }) => {
 						}
 					});
 
-					if (!result.ok){
-						console.error("Error en agregar task")
-						throw new Error(result.status)
+					if (result.status == '403'){
+						console.error("no se puede tener tareas iguales")
+						return '403';
 
 					}
 
