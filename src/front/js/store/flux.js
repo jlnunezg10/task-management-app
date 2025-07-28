@@ -185,7 +185,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 					const data = await result.json()
 					console.log("Tarea agregada exitosamente")
-					setStore({...store,tasks:[...getStore().tasks, data]})
+					setStore({...getStore(),tasks:[...getStore().tasks, data]})
+
 					return true;	
 
 					
@@ -258,6 +259,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 					setStore({...getStore(),tasks:data})
 					console.log("Se obtuvo las tasks")
+					console.log(data)
 					return true;
 
 					

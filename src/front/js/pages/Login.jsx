@@ -22,6 +22,7 @@ const Login = () => {
         const user_login = await actions.login(email, password);    
         if (user_login) {
             alert("Login exitoso");
+            navigate('/tasks')
 
         }
         else {

@@ -12,6 +12,7 @@ import { Navbar } from "./component/navbar";
 import { Footer } from "./component/footer";
 import  Signup  from "./pages/Signup.jsx";
 import  Login  from "./pages/Login.jsx";
+import InputTask from "./pages/InputTask.jsx";
 
 //create your first component
 const Layout = () => {
@@ -30,6 +31,7 @@ const Layout = () => {
                         <Route element={<Home />} path="/" />
                         <Route element={<Demo />} path="/demo" />
                         <Route element={<Signup />} path="/signup" />
+                        <Route element={<InputTask />} path="/tasks" />
                         <Route element={<Login />} path="/login" />
                         
                         <Route element={<Single />} path="/single/:theid" />

@@ -1,22 +1,25 @@
 import React, {useEffect, useState, useContext} from 'react'
 import {Context} from "../store/appContext"
 //import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Signup = () => {
 
-    const {store, actions } = useContext(Context);
+  const {store, actions } = useContext(Context);
 
-   const [username,setUsername] = useState("")
-    const [email,setEmail] = useState("")
-    const [password,setPassword] = useState("")
+  const [username,setUsername] = useState("")
+  const [email,setEmail] = useState("")
+  const [password,setPassword] = useState("")
 
-   const handleRegister = async () => {
+  const navigate = useNavigate()
+
+  const handleRegister = async () => {
 
     const user_register = await actions.register(username,email,password)
 
     if (user_register){
         alert("usuario registrado con exito")
+        navigate('/login')
     }
 
     else{
@@ -25,11 +28,11 @@ const Signup = () => {
 
    }
 
-    useEffect(() => {
-    if (localStorage.getItem("token")) {
-      navigate('/')
-    }
-  }, [])
+  //   useEffect(() => {
+  //   if (localStorage.getItem("token")) {
+  //     navigate('/')
+  //   }
+  // }, [])
 
 
   return (
