@@ -14,7 +14,13 @@ const Signup = () => {
 
   const handleRegister = async () => {
 
+    if (username == "" || email == "" || password == "" ){
+      alert("Por favor completar todos los datos solicitados")
+      return;
+    }
+
     const user_register = await actions.register(username,email,password)
+
 
     if (user_register){
         alert("usuario registrado con exito")
