@@ -52,10 +52,14 @@ const Login = () => {
             <input type="password" className="form-control" id="inputPassword" required value={password} onChange={(e) => {setPassword(e.target.value)}}/>
         </div>
 
-        <div className="mb-3 ">
-            <button type="button" className="btn btn-primary" onClick={handleLogin}>Login</button>
-        </div>
+    <div className="row d-flex justify-content-center">
+
+                <button type="button" className="col-4 btn btn-primary" onClick={handleLogin}>Login</button>
+            </div>
+        
     </div>
+
+        
     </div>
   )
 }

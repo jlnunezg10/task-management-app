@@ -22,6 +22,8 @@ export const Navbar = () => {
 		navigate('/login')
 	}
 
+	
+
 	// const handleTask = () => {
 
 	// 	if (!localStorage.getItem("token")) {
@@ -56,6 +58,15 @@ export const Navbar = () => {
 				}			
 					</Link>
 				</div>
+
+				<div className="ml-auto mx-1">
+					<Link to="tasks">
+					{
+					 localStorage.getItem("token") && <button className="btn btn-secondary">Tareas</button>
+					}
+					</Link>
+
+				</div>
 			
 				<div className="ml-auto mx-1">
 					{
@@ -63,6 +74,8 @@ export const Navbar = () => {
 					}
 
 				</div>
+
+				
 
 
 				</div>

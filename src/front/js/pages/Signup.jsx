@@ -32,6 +32,12 @@ const Signup = () => {
       <div className="card shadow p-4" style={{ width: '100%', maxWidth: '600px' }}>
       <h5 className="card-title text-center mb-4">Crea un nuevo Usuario</h5>
 
+
+        <div className="mb-3 row">
+            <label htmlFor="name" className="form-label">Ingresa tu nombre</label>
+            <input type="name" className="form-control" id="name" placeholder="Nombre" required value={username} onChange={(e) => {setUsername(e.target.value)}}/>
+        </div>
+
         <div className="mb-3 row">
             <label htmlFor="email" className="form-label">Ingresar una direccion email</label>
             <input type="email" className="form-control" id="email" placeholder="name@example.com" required value={email} onChange={(e) => {setEmail(e.target.value)}}/>
@@ -42,8 +48,8 @@ const Signup = () => {
             <input type="password" className="form-control" id="inputPassword" required value={password} onChange={(e) => {setPassword(e.target.value)}}/>
        
           </div>
-    <div className='row'>
-      <button type="button" className="btn btn-primary" onClick={handleRegister}>Crear nueva cuenta</button>
+    <div className='row d-flex justify-content-center'>
+      <button type="button" className=" col-4 btn btn-primary" onClick={handleRegister}>Crear nueva cuenta</button>
     </div>
       
     </div>
